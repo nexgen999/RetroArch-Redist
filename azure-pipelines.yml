@@ -21,21 +21,35 @@ steps:
 
       #Get fresh cores from buildbot
       $url = "http://buildbot.libretro.com/nightly/windows/x86_64/RetroArch_cores.7z"
-      $output = "./RetroArchCores.7z"
+      $output = ".\RetroArchCores.7z"
       Invoke-WebRequest -Uri $url -OutFile $output
 
       #Get fresh non-core dll files from buildbot
       $url = "http://buildbot.libretro.com/nightly/windows/x86_64/RetroArch_update.7z"
-      $output = "./RetroArchOther.7z"
+      $output = ".\RetroArchOther.7z"
       Invoke-WebRequest -Uri $url -OutFile $output
       
       #Extract 7z files
-      sz x -o$./RetroArch-Redist/cores/ ./RetroArchCores.7z -r ;
-      sz x -o$./RetroArch-Redist/other/ ./RetroArchOther.7z -r ;
+      sz x -o$.\cores .\RetroArchCores.7z -r ;
+      sz x -o$.\other .\RetroArchOther.7z -r ;
       
       #Delete 7z files
-      Remove-Item ./RetroArchCores.7z
-      Remove-Item ./RetroArchOther.7z
+      Remove-Item .\RetroArchCores.7z
+      Remove-Item .\RetroArchOther.7z
+      
+      #Overwrite existing .dll files with new .dll files
+      cd cores
+      cd RetroArch-Win64
+      cd cores
+      Move-Item -Path ".\*.dll" -Destination D:\a\1\s\RetroArch-Redist\cores -force
+      
+      #Overwrite existing .dll files with new .dll files
+      cd ..
+      cd ..
+      cd ..
+      cd other
+      cd RetroArch-Win64
+      Move-Item -Path ".\*.dll" -Destination D:\a\1\s\RetroArch-Redist\other -force
       
       #Send new .dll files to repo
       git lfs track "*.dll"
