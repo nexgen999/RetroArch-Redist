@@ -33,6 +33,10 @@ steps:
       sz x -o$./RetroArch-Redist/cores/ ./RetroArchCores.7z -r ;
       sz x -o$./RetroArch-Redist/other/ ./RetroArchOther.7z -r ;
       
+      #Delete 7z files
+      Remove-Item ./RetroArchCores.7z
+      Remove-Item ./RetroArchOther.7z
+      
       #Send new .dll files to repo
       git lfs track "*.dll"
       git add .
