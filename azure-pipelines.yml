@@ -38,5 +38,3 @@ steps:
       git add .
       git commit -m "Get fresh cores from buildbot"
       git push
-
-container:
