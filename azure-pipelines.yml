@@ -39,27 +39,31 @@ steps:
       
       #Extract 7z files
       $sourcefile = ".\RetroArchCores.7z"
-      Expand-7Zip -ArchiveFileName $sourcefile -TargetPath '.\cores'
+      Expand-7Zip -ArchiveFileName $sourcefile -TargetPath '.\tempcores'
       $sourcefile = ".\RetroArchOther.7z"
-      Expand-7Zip -ArchiveFileName $sourcefile -TargetPath '.\other'
-      
-      #Delete 7z files
-      Remove-Item .\RetroArchCores.7z
-      Remove-Item .\RetroArchOther.7z
-      
+      Expand-7Zip -ArchiveFileName $sourcefile -TargetPath '.\tempother'
+
       #Overwrite existing .dll files with new .dll files
-      cd cores
+      cd tempcores
       cd RetroArch-Win64
       cd cores
       Move-Item -Path ".\*.dll" -Destination D:\a\1\s\RetroArch-Redist\cores -force
+      cd ..
+      cd ..
+      cd ..
       
       #Overwrite existing .dll files with new .dll files
-      cd ..
-      cd ..
-      cd ..
-      cd other
+      cd tempother
       cd RetroArch-Win64
       Move-Item -Path ".\*.dll" -Destination D:\a\1\s\RetroArch-Redist\other -force
+      cd ..
+      cd ..
+
+      #Clean
+      Get-ChildItem .\tempcores -Recurse | Remove-Item
+      Get-ChildItem .\tempother -Recurse | Remove-Item
+      Remove-Item .\RetroArchCores.7z
+      Remove-Item .\RetroArchOther.7z
       
       #Send new .dll files to repo
       git lfs install
