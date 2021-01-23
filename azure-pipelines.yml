@@ -25,11 +25,15 @@ steps:
       $url = "http://buildbot.libretro.com/nightly/windows/x86_64/RetroArch_cores.7z"
       $output = ".\RetroArchCores.7z"
       Invoke-WebRequest -Uri $url -OutFile $output
+      
+      dir
 
       #Get fresh non-core dll files from buildbot
       $url = "http://buildbot.libretro.com/nightly/windows/x86_64/RetroArch_update.7z"
       $output = ".\RetroArchOther.7z"
       Invoke-WebRequest -Uri $url -OutFile $output
+
+      dir
       
       #Intsall 7zip extractor
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -43,23 +47,30 @@ steps:
       $sourcefile = ".\RetroArchOther.7z"
       Expand-7Zip -ArchiveFileName $sourcefile -TargetPath '.\tempother'
 
+      dir
+
       #Overwrite existing .dll files with new .dll files
       Move-Item -Path "tempcores\RetroArch-Win64\cores\*.dll" -Destination .\cores -force
       
       #Overwrite existing .dll files with new .dll files
       Move-Item -Path "tempother\RetroArch-Win64\*.dll" -Destination .\other -force
 
+      dir
+
       #Clean
       Remove-Item '.\tempcores' -Recurse
       Remove-Item '.\tempother' -Recurse
       Remove-Item .\RetroArchCores.7z
       Remove-Item .\RetroArchOther.7z
+
+      dir
+
+      git config --global user.email "${env:EMAIL}"
+      git config --global user.name "${env:FIRSTNAME}"
       
       #Send new .dll files to repo
       git branch tmp
       git checkout master
-      git lfs install
-      git lfs track "*.dll"
       git add .
       git commit -m "Get fresh cores from buildbot"
       git merge tmp
