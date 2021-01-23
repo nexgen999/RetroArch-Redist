@@ -44,20 +44,10 @@ steps:
       Expand-7Zip -ArchiveFileName $sourcefile -TargetPath '.\tempother'
 
       #Overwrite existing .dll files with new .dll files
-      cd tempcores
-      cd RetroArch-Win64
-      cd cores
-      Move-Item -Path ".\*.dll" -Destination D:\a\1\s\RetroArch-Redist\cores -force
-      cd ..
-      cd ..
-      cd ..
+      Move-Item -Path "tempcores\RetroArch-Win64\cores\*.dll" -Destination .\cores -force
       
       #Overwrite existing .dll files with new .dll files
-      cd tempother
-      cd RetroArch-Win64
-      Move-Item -Path ".\*.dll" -Destination D:\a\1\s\RetroArch-Redist\other -force
-      cd ..
-      cd ..
+      Move-Item -Path "tempother\RetroArch-Win64\*.dll" -Destination .\other -force
 
       #Clean
       Get-ChildItem .\tempcores -Recurse | Remove-Item
@@ -66,8 +56,10 @@ steps:
       Remove-Item .\RetroArchOther.7z
       
       #Send new .dll files to repo
+      git branch tmp
+      git checkout master
       git lfs install
       git lfs track "*.dll"
       git add .
       git commit -m "Get fresh cores from buildbot"
-      git push
+      git merge tmp
