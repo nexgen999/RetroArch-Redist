@@ -46,16 +46,35 @@ steps:
       Expand-7Zip -ArchiveFileName $sourcefile -TargetPath '.\tempother'
 
       #Overwrite existing .dll files with new .dll files
-      Move-Item -Path "tempcores\RetroArch-Win64\cores\*.dll" -Destination .\cores -force
+      Move-Item -Path ".\tempcores\RetroArch-Win64\cores\*.dll" -Destination .\cores -force
       
       #Overwrite existing .dll files with new .dll files
-      Move-Item -Path "tempother\RetroArch-Win64\*.dll" -Destination .\other -force
+      Move-Item -Path ".\tempother\RetroArch-Win64\*.dll" -Destination .\other -force
+
+      cd tempother
+      dir
+      cd RetroArch-Win64
+      dir
+      cd ..
+      cd ..
+
+      cd tempcores
+      dir
+      cd RetroArch-Win64
+      dir
+      cd cores
+      dir
+      cd ..
+      cd ..
+      cd ..
 
       #Clean
       Remove-Item '.\tempcores' -Recurse
       Remove-Item '.\tempother' -Recurse
       Remove-Item .\RetroArchCores.7z
       Remove-Item .\RetroArchOther.7z
+      
+      dir
 
       git config --global user.email "${env:EMAIL}"
       git config --global user.name "${env:FIRSTNAME}"
