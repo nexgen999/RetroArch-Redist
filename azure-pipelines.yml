@@ -29,9 +29,17 @@ steps:
       $output = ".\RetroArchOther.7z"
       Invoke-WebRequest -Uri $url -OutFile $output
       
+      #Intsall 7zip extractor
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+      Set-PSRepository -Name 'PSGallery' -SourceLocation "https://www.powershellgallery.com/api/v2" -InstallationPolicy Trusted
+      Install-Module -Name 7Zip4PowerShell -Force
+      
       #Extract 7z files
-      sz x -o$.\cores .\RetroArchCores.7z -r ;
-      sz x -o$.\other .\RetroArchOther.7z -r ;
+      $sourcefile = ".\RetroArch_cores.7z"
+      Expand-7Zip -ArchiveFileName $sourcefile -TargetPath '.\cores'
+      $sourcefile = ".\RetroArch_update.7z"
+      Expand-7Zip -ArchiveFileName $sourcefile -TargetPath '.\other'
       
       #Delete 7z files
       Remove-Item .\RetroArchCores.7z
