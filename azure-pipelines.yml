@@ -36,9 +36,9 @@ steps:
       Install-Module -Name 7Zip4PowerShell -Force
       
       #Extract 7z files
-      $sourcefile = ".\RetroArch_cores.7z"
+      $sourcefile = ".\RetroArchCores.7z"
       Expand-7Zip -ArchiveFileName $sourcefile -TargetPath '.\cores'
-      $sourcefile = ".\RetroArch_update.7z"
+      $sourcefile = ".\RetroArchOther.7z"
       Expand-7Zip -ArchiveFileName $sourcefile -TargetPath '.\other'
       
       #Delete 7z files
